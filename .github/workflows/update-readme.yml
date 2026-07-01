@@ -1,0 +1,46 @@
+name: Update Study README
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  update-readme:
+    if: "!contains(github.event.head_commit.message, '[skip actions]')"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Get changed files
+        run: |
+          git diff --name-only HEAD~1 HEAD > changed_files.txt
+          cat changed_files.txt
+
+      - name: Update README
+        run: |
+          python scripts/update_readme.py
+
+      - name: Commit README
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add README.md
+
+          if git diff --cached --quiet; then
+            echo "No README changes"
+          else
+            git commit -m "docs: update study README [skip actions]"
+            git push
+          fi

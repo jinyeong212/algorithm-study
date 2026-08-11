@@ -3,7 +3,6 @@ import java.util.*;
 class Solution {
     public int[] solution(int[] prices) {
         int[] answer = new int[prices.length];
-        
         ArrayDeque<Integer> q = new ArrayDeque<>();
         
         for(int i = 0; i < prices.length; i++){
@@ -11,7 +10,6 @@ class Solution {
                 int index = q.pollLast();
                 answer[index] = i - index;
             }
-            
             q.add(i);
         }
         

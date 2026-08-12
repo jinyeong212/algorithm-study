@@ -14,79 +14,46 @@ class Solution {
                 int n = Integer.parseInt(operation.substring(2));
                 insert(n);
             } else if (operation.equals("D -1")) {
-                removeMin();
+                remove(asc);
             } else{
-                removeMax();
+                remove(desc);
             }
         }
         
-        return getAnswer();
+        return new int[] {peek(desc), peek(asc)};
     }
     
     public void insert(int num){
         asc.add(num);
         desc.add(num);
         
-        if(map.get(num) == null)
-            map.put(num, 0);
+        if(map.get(num) == null) map.put(num, 0);
         
         map.put(num, map.get(num) + 1);
     }
     
-    public int[] getAnswer(){
-        int max = 0;
-        int min = 0;
-        
-        while(!desc.isEmpty()){
-            int temp = desc.poll();
+    public void remove(PriorityQueue<Integer> pq){
+        while(!pq.isEmpty()){
+            int num = pq.poll();
             
-            if(map.get(temp) == 0)
-                continue;
+            if(map.get(num) == 0) continue;
             
-            max = temp;
-            
-            break;
-        }
-        
-        while(!asc.isEmpty()){
-            int temp = asc.poll();
-            
-            if(map.get(temp) == 0)
-                continue;
-            
-            min = temp;
-            
-            break;
-        }
-        
-        
-        return new int[] {max, min};
-    }
-    
-    public void removeMax(){
-        while(!desc.isEmpty()){
-            int max = desc.poll();
-            
-            if(map.get(max) == 0)
-                continue;
-            
-            map.put(max, map.get(max) - 1);
-            
+            map.put(num, map.get(num) - 1);
             break;
         }
     }
     
-    public void removeMin(){
-        while(!asc.isEmpty()){
-            int min = asc.poll();
+    public int peek(PriorityQueue<Integer> pq){ 
+        
+        while(!pq.isEmpty()){
+            int temp = pq.poll();
             
-            if(map.get(min) == 0)
-                continue;
+            if(map.get(temp) == 0) continue;
             
-            map.put(min, map.get(min) - 1);
-            
-            break;
+            return temp;
         }
+        
+        return 0;
     }
     
     public void init(){
